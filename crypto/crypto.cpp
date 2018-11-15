@@ -245,17 +245,36 @@ namespace crypto {
 	std::cout << "Converted binary to struct, status:\n" << resp_struct.status << "\n";
 	std::cout << "Number of blocks:\n" << resp_struct.blocks.size() << "\n";
 
-	// parse block blobs
-	for (int i = 0; i < resp_struct.blocks.size(); i++) {
+	// process blocks
+	for (int blockIdx = 0; blockIdx < resp_struct.blocks.size(); blockIdx++) {
+
+		// parse and validate block
 		cryptonote::block block;
-		if (!cryptonote::parse_and_validate_block_from_blob(resp_struct.blocks[i].block, block)) {
-			throw std::runtime_error("failed to parse block blob at index " + std::to_string(i));
+		if (cryptonote::parse_and_validate_block_from_blob(resp_struct.blocks[blockIdx].block, block)) {
+			std::cout << "Serialized block: " << cryptonote::obj_to_json_str(block) << "\n";
+			//COMMAND_RPC_GET_BLOCK::response blockResp;
+		} else {
+			throw std::runtime_error("failed to parse block blob at index " + std::to_string(blockIdx));
+		}
+
+		// parse and validate txs
+		for (int txIdx = 0; txIdx < block.tx_hashes.size(); txIdx++) {
+			cryptonote::transaction tx;
+			if (cryptonote::parse_and_validate_tx_from_blob(resp_struct.blocks[blockIdx].txs[txIdx], tx)) {
+				std::cout << "Serialized tx: " << cryptonote::obj_to_json_str(tx) << "\n";
+			} else {
+				throw std::runtime_error("failed to parse tx blob at index " + std::to_string(txIdx));
+			}
 		}
 	}
 
-	//cryptonote::parse_and_validate_block_from_blob()
+	// create object with binary string memory address info
+//	boost::property_tree::ptree root;
+//	root.put("ptr", reinterpret_cast<intptr_t>(ptr->c_str()));
+//	root.put("length", ptr->length());
 
-	//std::cout << "Converted binary blocks to json:\n" << buff_json << "\n";
+
+
 
 
 	buff_json = "Not implemented!";
