@@ -34,6 +34,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
+
 #include <memory>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/lock_guard.hpp>
@@ -44,9 +45,13 @@
 #include "crypto.h"
 #include "hash.h"
 
-#include "rpc/core_rpc_server_commands_defs.h"	// TODO: consolidate with other .h dependencies and move up a project
+// binary dependencies
+// TODO: consolidate binary dependencies and move up a project
+#include "rpc/core_rpc_server_commands_defs.h"
 #include "storages/portable_storage_template_helper.h"
 #include "cryptonote_basic/cryptonote_format_utils.h"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 namespace {
   static void local_abort(const char *msg)
@@ -245,12 +250,14 @@ namespace crypto {
 	std::cout << "Converted binary to struct, status:\n" << resp_struct.status << "\n";
 	std::cout << "Number of blocks:\n" << resp_struct.blocks.size() << "\n";
 
-	// process blocks
+	// collect blocks and txs
+	std::vector<cryptonote::block> blocks;
 	for (int blockIdx = 0; blockIdx < resp_struct.blocks.size(); blockIdx++) {
 
 		// parse and validate block
 		cryptonote::block block;
 		if (cryptonote::parse_and_validate_block_from_blob(resp_struct.blocks[blockIdx].block, block)) {
+			blocks.push_back(block);
 			std::cout << "Serialized block: " << cryptonote::obj_to_json_str(block) << "\n";
 			//COMMAND_RPC_GET_BLOCK::response blockResp;
 		} else {
@@ -268,16 +275,15 @@ namespace crypto {
 		}
 	}
 
-	// create object with binary string memory address info
-//	boost::property_tree::ptree root;
-//	root.put("ptr", reinterpret_cast<intptr_t>(ptr->c_str()));
-//	root.put("length", ptr->length());
+	// build property tree with response values
+	boost::property_tree::ptree root;
+	root.put("blocks", std::string("hi there!"));
 
-
-
-
-
-	buff_json = "Not implemented!";
+	// convert root to string // TODO: common utility with serial_bridge
+	std::stringstream ss;
+	boost::property_tree::write_json(ss, root, false/*pretty*/);
+	buff_json = ss.str();
+	std::cout << buff_json << "\n";
   }
 
   void crypto_ops::derive_secret_key(const key_derivation &derivation, size_t output_index,
