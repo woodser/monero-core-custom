@@ -46,6 +46,8 @@
 #include "hex.h"
 #include "span.h"
 #include "hash.h"
+#include "serialization/keyvalue_serialization.h"
+#include "storages/portable_storage.h"
 
 namespace crypto {
 
@@ -124,6 +126,10 @@ namespace crypto {
     friend void derivation_to_scalar(const key_derivation &derivation, size_t output_index, ec_scalar &res);
     static bool derive_public_key(const key_derivation &, std::size_t, const public_key &, public_key &);
     friend bool derive_public_key(const key_derivation &, std::size_t, const public_key &, public_key &);
+    static void json_to_binary(const std::string &, std::string &);
+    friend void json_to_binary(const std::string &, std::string &);
+    static void binary_to_json(const std::string &, std::string &);
+    friend void binary_to_json(const std::string &, std::string &);
     static void derive_secret_key(const key_derivation &, std::size_t, const secret_key &, secret_key &);
     friend void derive_secret_key(const key_derivation &, std::size_t, const secret_key &, secret_key &);
     static bool derive_subaddress_public_key(const public_key &, const key_derivation &, std::size_t, public_key &);
