@@ -44,6 +44,10 @@
 #include "crypto.h"
 #include "hash.h"
 
+#include "rpc/core_rpc_server_commands_defs.h"	// TODO: consolidate with other .h dependencies and move up a project
+#include "storages/portable_storage_template_helper.h"
+#include "cryptonote_basic/cryptonote_format_utils.h"
+
 namespace {
   static void local_abort(const char *msg)
   {
@@ -231,7 +235,29 @@ namespace crypto {
   }
 
   void crypto_ops::binary_blocks_to_json(const std::string &buff_bin, std::string &buff_json) {
-	std::cout << "crypto_ops::binary_blocks_to_json not implemented!\n";
+
+	// convert binary to json
+	//binary_to_json(buff_bin, buff_json);
+
+	cryptonote::COMMAND_RPC_GET_BLOCKS_BY_HEIGHT::response resp_struct;
+	epee::serialization::load_t_from_binary(resp_struct, buff_bin);
+
+	std::cout << "Converted binary to struct, status:\n" << resp_struct.status << "\n";
+	std::cout << "Number of blocks:\n" << resp_struct.blocks.size() << "\n";
+
+	// parse block blobs
+	for (int i = 0; i < resp_struct.blocks.size(); i++) {
+		cryptonote::block block;
+		if (!cryptonote::parse_and_validate_block_from_blob(resp_struct.blocks[i].block, block)) {
+			throw std::runtime_error("failed to parse block blob at index " + std::to_string(i));
+		}
+	}
+
+	//cryptonote::parse_and_validate_block_from_blob()
+
+	//std::cout << "Converted binary blocks to json:\n" << buff_json << "\n";
+
+
 	buff_json = "Not implemented!";
   }
 
