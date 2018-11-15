@@ -218,16 +218,21 @@ namespace crypto {
     return true;
   }
 
-  void crypto_ops::json_to_binary(const std::string& buff_json, std::string &buff_bin) {
+  void crypto_ops::json_to_binary(const std::string &buff_json, std::string &buff_bin) {
 	epee::serialization::portable_storage ps;
 	ps.load_from_json(buff_json);
 	ps.store_to_binary(buff_bin);
   }
 
-  void crypto_ops::binary_to_json(const std::string& buff_bin, std::string &buff_json) {
+  void crypto_ops::binary_to_json(const std::string &buff_bin, std::string &buff_json) {
 	epee::serialization::portable_storage ps;
 	ps.load_from_binary(buff_bin);
 	ps.dump_as_json(buff_json);
+  }
+
+  void crypto_ops::binary_blocks_to_json(const std::string &buff_bin, std::string &buff_json) {
+	std::cout << "crypto_ops::binary_blocks_to_json not implemented!\n";
+	buff_json = "Not implemented!";
   }
 
   void crypto_ops::derive_secret_key(const key_derivation &derivation, size_t output_index,

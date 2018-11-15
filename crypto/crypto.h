@@ -126,10 +126,6 @@ namespace crypto {
     friend void derivation_to_scalar(const key_derivation &derivation, size_t output_index, ec_scalar &res);
     static bool derive_public_key(const key_derivation &, std::size_t, const public_key &, public_key &);
     friend bool derive_public_key(const key_derivation &, std::size_t, const public_key &, public_key &);
-    static void json_to_binary(const std::string &, std::string &);
-    friend void json_to_binary(const std::string &, std::string &);
-    static void binary_to_json(const std::string &, std::string &);
-    friend void binary_to_json(const std::string &, std::string &);
     static void derive_secret_key(const key_derivation &, std::size_t, const secret_key &, secret_key &);
     friend void derive_secret_key(const key_derivation &, std::size_t, const secret_key &, secret_key &);
     static bool derive_subaddress_public_key(const public_key &, const key_derivation &, std::size_t, public_key &);
@@ -152,6 +148,12 @@ namespace crypto {
       const public_key *const *, std::size_t, const signature *);
     friend bool check_ring_signature(const hash &, const key_image &,
       const public_key *const *, std::size_t, const signature *);
+    static void json_to_binary(const std::string &, std::string &);
+    friend void json_to_binary(const std::string &, std::string &);
+    static void binary_to_json(const std::string &, std::string &);
+    friend void binary_to_json(const std::string &, std::string &);
+    static void binary_blocks_to_json(const std::string &, std::string &);
+    friend void binary_blocks_to_json(const std::string &, std::string &);
   };
 
   void generate_random_bytes_thread_safe(size_t N, uint8_t *bytes);
@@ -201,12 +203,6 @@ namespace crypto {
   inline bool derive_public_key(const key_derivation &derivation, std::size_t output_index,
     const public_key &base, public_key &derived_key) {
     return crypto_ops::derive_public_key(derivation, output_index, base, derived_key);
-  }
-  inline void json_to_binary(const std::string &buff_json, std::string &buff_bin) {
-  	return crypto_ops::json_to_binary(buff_json, buff_bin);
-  }
-  inline void binary_to_json(const std::string &buff_bin, std::string &buff_json) {
-   	return crypto_ops::binary_to_json(buff_bin, buff_json);
   }
   inline void derivation_to_scalar(const key_derivation &derivation, size_t output_index, ec_scalar &res) {
     return crypto_ops::derivation_to_scalar(derivation, output_index, res);
@@ -272,6 +268,18 @@ namespace crypto {
     const std::vector<const public_key *> &pubs,
     const signature *sig) {
     return check_ring_signature(prefix_hash, image, pubs.data(), pubs.size(), sig);
+  }
+
+  /* Portable storage serialization utilities.
+   */
+  inline void json_to_binary(const std::string &buff_json, std::string &buff_bin) {
+  	return crypto_ops::json_to_binary(buff_json, buff_bin);
+  }
+  inline void binary_to_json(const std::string &buff_bin, std::string &buff_json) {
+   	return crypto_ops::binary_to_json(buff_bin, buff_json);
+  }
+  inline void binary_blocks_to_json(const std::string &buff_bin, std::string &buff_json) {
+	return crypto_ops::binary_blocks_to_json(buff_bin, buff_json);
   }
 
   inline std::ostream &operator <<(std::ostream &o, const crypto::public_key &v) {
