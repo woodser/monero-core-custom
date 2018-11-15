@@ -255,6 +255,14 @@ namespace hw {
             return crypto::derive_public_key(derivation, output_index, base, derived_key);
         }
 
+        void device_default::json_to_binary(const std::string &buff_json, std::string &buff_bin) {
+        	return crypto::json_to_binary(buff_json, buff_bin);
+        }
+
+        void device_default::binary_to_json(const std::string &buff_bin, std::string &buff_json) {
+			return crypto::json_to_binary(buff_bin, buff_json);
+		}
+
         bool device_default::secret_key_to_public_key(const crypto::secret_key &sec, crypto::public_key &pub) {
             return crypto::secret_key_to_public_key(sec,pub);
         }

@@ -196,6 +196,12 @@ namespace crypto {
     const public_key &base, public_key &derived_key) {
     return crypto_ops::derive_public_key(derivation, output_index, base, derived_key);
   }
+  inline void json_to_binary(const std::string &buff_json, std::string &buff_bin) {
+  	return crypto_ops::json_to_binary(buff_json, buff_bin);
+  }
+  inline void binary_to_json(const std::string &buff_bin, std::string &buff_json) {
+   	return crypto_ops::binary_to_json(buff_bin, buff_json);
+  }
   inline void derivation_to_scalar(const key_derivation &derivation, size_t output_index, ec_scalar &res) {
     return crypto_ops::derivation_to_scalar(derivation, output_index, res);
   }
