@@ -99,8 +99,6 @@ namespace hw {
             bool  derivation_to_scalar(const crypto::key_derivation &derivation, const size_t output_index, crypto::ec_scalar &res) override;
             bool  derive_secret_key(const crypto::key_derivation &derivation, const std::size_t output_index, const crypto::secret_key &sec,  crypto::secret_key &derived_sec) override;
             bool  derive_public_key(const crypto::key_derivation &derivation, const std::size_t output_index, const crypto::public_key &pub,  crypto::public_key &derived_pub) override;
-            void  json_to_binary(const std::string &buff_json, std::string &buff_bin) override;
-            void  binary_to_json(const std::string &buff_bin, std::string &buff_json) override;
             bool  secret_key_to_public_key(const crypto::secret_key &sec, crypto::public_key &pub) override;
             bool  generate_key_image(const crypto::public_key &pub, const crypto::secret_key &sec, crypto::key_image &image) override;
 

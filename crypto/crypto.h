@@ -148,12 +148,6 @@ namespace crypto {
       const public_key *const *, std::size_t, const signature *);
     friend bool check_ring_signature(const hash &, const key_image &,
       const public_key *const *, std::size_t, const signature *);
-    static void json_to_binary(const std::string &, std::string &);
-    friend void json_to_binary(const std::string &, std::string &);
-    static void binary_to_json(const std::string &, std::string &);
-    friend void binary_to_json(const std::string &, std::string &);
-    static void binary_blocks_to_json(const std::string &, std::string &);
-    friend void binary_blocks_to_json(const std::string &, std::string &);
   };
 
   void generate_random_bytes_thread_safe(size_t N, uint8_t *bytes);
@@ -268,18 +262,6 @@ namespace crypto {
     const std::vector<const public_key *> &pubs,
     const signature *sig) {
     return check_ring_signature(prefix_hash, image, pubs.data(), pubs.size(), sig);
-  }
-
-  /* Portable storage serialization utilities.
-   */
-  inline void json_to_binary(const std::string &buff_json, std::string &buff_bin) {
-  	return crypto_ops::json_to_binary(buff_json, buff_bin);
-  }
-  inline void binary_to_json(const std::string &buff_bin, std::string &buff_json) {
-   	return crypto_ops::binary_to_json(buff_bin, buff_json);
-  }
-  inline void binary_blocks_to_json(const std::string &buff_bin, std::string &buff_json) {
-	return crypto_ops::binary_blocks_to_json(buff_bin, buff_json);
   }
 
   inline std::ostream &operator <<(std::ostream &o, const crypto::public_key &v) {
